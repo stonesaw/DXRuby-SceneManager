@@ -13,6 +13,7 @@ end
 
 class SceneManager
   # new(scenes_hash{symbol => SceneClass}, start: symbol)
+  @@do_exit_log = true
   def initialize(scenes, start: nil)
     # check type
     raise ArgumentError.new("Please hash! #Arg:scenes") if scenes.class != Hash
@@ -27,6 +28,8 @@ class SceneManager
     @@scenes = scenes
     if start == nil
       @@now = @@scenes.first[0] # first symbol
+    elsif !@@scenes.has_key?(start)
+      raise ArgumentError.new("SceneManager haven't key '#{start}' Arg:start")
     else
       @@now = start
     end
@@ -43,20 +46,39 @@ class SceneManager
     end
     
     def next(scene_symbol)
-      raise ArgumentError.new("SceneManager haven't key (#{scene_symbol}) Arg:scene_symbol") unless @@scenes.has_key?(scene_symbol)
+      raise ArgumentError.new("SceneManager haven't key '#{scene_symbol}' Arg:scene_symbol") unless @@scenes.has_key?(scene_symbol)
+      raise ArgumentError.new("'#{scene_symbol}' is now scene") if scene_symbol == @@now
       @@scenes[@@now].last
       @@now = scene_symbol
       @@scenes[@@now].new
     end
 
+    def kill
+      exit if @@do_exit_log == false
+
+      puts "Exit! (called 'SceneManager.kill')"
+      puts ":: log ::"
+      puts "last scene: #{@@scenes[@@now]} (:#{@@now})"
+      exit
+    end
+
     # return: symbol
     def now
-      return @@now
+      @@now
     end
 
     # return: hash
     def scenes
-      return @@scenes
+      @@scenes
+    end
+
+    def EXIT_LOG
+      @@do_exit_log
+    end
+
+    def EXIT_LOG=(bool)
+      raise ArgumentError.new("Please boolean") unless bool.class == TrueClass || bool.class == FalseClass 
+      @@do_exit_log = bool
     end
   end
 end
