@@ -4,7 +4,7 @@ require_relative 'scene-manager' # can use Scene and SceneManager
 $font = Font.new(24)
 # scene: title
 class Title < Scene # have to Inheritance `Scene` class
-  def initialize
+  def initialize(args)
     @@y = 5
   end
 
@@ -42,9 +42,11 @@ end
 
 # scene: play
 class Play < Scene
-  def initialize
+  def initialize(args)
     @@box = Sprite.new(100, 100, Image.new(50, 50, C_RED))
     @@mouse_x, @@mouse_y = Input.mouse_x, Input.mouse_y
+    p args[0]
+    p args[1]
   end
 
   class << self

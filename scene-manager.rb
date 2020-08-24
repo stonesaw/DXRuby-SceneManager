@@ -33,7 +33,7 @@ class SceneManager
     else
       @@now = start
     end
-    @@scenes[@@now].new # now scene init!
+    @@scenes[@@now].new(nil) # now scene init!
   end
 
   class << self
@@ -45,12 +45,12 @@ class SceneManager
       @@scenes[@@now].draw
     end
     
-    def next(scene_symbol)
+    def next(scene_symbol, *args)
       raise ArgumentError.new("SceneManager haven't key '#{scene_symbol}' Arg:scene_symbol") unless @@scenes.has_key?(scene_symbol)
       raise ArgumentError.new("'#{scene_symbol}' is now scene") if scene_symbol == @@now
       @@scenes[@@now].last
       @@now = scene_symbol
-      @@scenes[@@now].new
+      @@scenes[@@now].new(args)
     end
 
     def kill
